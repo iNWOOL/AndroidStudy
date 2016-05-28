@@ -20,12 +20,12 @@ public class MyPullParser extends AsyncTask<String, Void, String> {
     TextView textView;
     @Override
     protected String doInBackground(String... params) {
+        String res = "";
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser xpp = factory.newPullParser();
             xpp.setInput(new URL(params[0]).openStream(), "utf-8");
 
-            String res = "";
             int eventtype = xpp.getEventType();
             boolean bRead = false;
             while (eventtype != XmlPullParser.END_DOCUMENT){
@@ -51,6 +51,7 @@ public class MyPullParser extends AsyncTask<String, Void, String> {
                     case XmlPullParser.TEXT:
                         if(bRead) {
                             res += xpp.getText();
+                            res += "\n";
                             bRead = false;
                         }
                         break;
@@ -62,11 +63,12 @@ public class MyPullParser extends AsyncTask<String, Void, String> {
             e.printStackTrace();
         }
 
-        return null;
+        return res;
     }
 
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
+        textView.setText(s);
     }
 }
